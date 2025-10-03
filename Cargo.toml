@@ -2,6 +2,14 @@
 name = "nihility-rpc"
 version = "0.1.0"
 edition = "2024"
+authors = ["nihilityer <nihilityer@mail.nihilityer.top>"]
+description = "nihility project rpc module"
+license = "MIT"
+repository = "https://github.com/nihilityer/nihility-rpc"
+homepage = "https://github.com/nihilityer/nihility-rpc"
+documentation = "https://docs.rs/nihility-rpc"
+readme = "README.md"
+keywords = ["nihility", "rpc"]
 
 [features]
 client = ["tonic/channel"]
