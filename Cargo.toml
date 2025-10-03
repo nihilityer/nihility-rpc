@@ -1,0 +1,24 @@
+[package]
+name = "nihility-rpc"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+client = ["tonic/channel"]
+server = ["tonic/server"]
+
+[dependencies]
+tracing = { version = "0.1" }
+tonic = { version = "0.14", default-features = false, features = ["codegen", "router"] }
+prost = { version = "0.14" }
+tonic-prost = { version = "0.14" }
+thiserror = { version = "2.0", default-features = false }
+
+[build-dependencies]
+tonic-prost-build = { version = "0.14" }
+
+[dev-dependencies]
+tokio = { version = "1.47", features = ["full"] }
+tokio-stream = { version = "0.1" }
+tracing-subscriber = { version = "0.3", features = ["local-time", "ansi", "fmt", "std"] }
+time = { version = "0.3", default-features = false, features = ["parsing"] }

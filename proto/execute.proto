@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package nihility.execute;
+
+message ExecuteRequest {
+  ExecuteType type = 1;
+  bytes payload = 2;
+}
+
+enum ExecuteType {
+  STRING = 0;
+}
+
+message ExecuteResponse {
+  ExecuteType type = 1;
+  bytes payload = 2;
+}
+
+service Execute {
+  rpc Execute(ExecuteRequest) returns (ExecuteResponse);
+  rpc ExecuteStreamOut(ExecuteRequest) returns (stream ExecuteResponse);
+  rpc ExecuteStream(stream ExecuteRequest) returns (stream ExecuteResponse);
+}
