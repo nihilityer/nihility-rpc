@@ -13,7 +13,7 @@ keywords = ["nihility", "rpc"]
 
 [dependencies]
 tracing = { version = "0.1" }
-tonic = { version = "0.14", default-features = false, features = ["codegen", "router"] }
+tonic = { version = "0.14", default-features = false, features = ["codegen", "router", "server", "channel"] }
 prost = { version = "0.14" }
 tonic-prost = { version = "0.14" }
 thiserror = { version = "2.0", default-features = false }
