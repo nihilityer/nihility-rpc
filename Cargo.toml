@@ -12,6 +12,7 @@ readme = "README.md"
 keywords = ["nihility", "rpc"]
 
 [features]
+default = ["server"]
 client = ["tonic/channel"]
 server = ["tonic/server"]
 

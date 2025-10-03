@@ -3,6 +3,7 @@ extern crate alloc;
 pub mod error;
 pub(crate) mod proto;
 
+#[cfg(any(feature = "client", feature = "server"))]
 pub mod common {
     pub use crate::proto::execute::{ExecuteData, ExecuteRequest, ExecuteResponse};
 }
