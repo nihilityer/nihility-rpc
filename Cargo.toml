@@ -11,11 +11,6 @@ documentation = "https://docs.rs/nihility-rpc"
 readme = "README.md"
 keywords = ["nihility", "rpc"]
 
-[features]
-default = ["server"]
-client = ["tonic/channel"]
-server = ["tonic/server"]
-
 [dependencies]
 tracing = { version = "0.1" }
 tonic = { version = "0.14", default-features = false, features = ["codegen", "router"] }
