@@ -26,3 +26,4 @@ tokio = { version = "1.47", features = ["full"] }
 tokio-stream = { version = "0.1" }
 tracing-subscriber = { version = "0.3", features = ["local-time", "ansi", "fmt", "std"] }
 time = { version = "0.3", default-features = false, features = ["parsing"] }
+wav_io = { version = "0.1" }

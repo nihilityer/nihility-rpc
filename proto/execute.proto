@@ -2,6 +2,20 @@ syntax = "proto3";
 
 package nihility.execute;
 
+enum AudioEndianness {
+  Big = 0;
+  Little = 1;
+}
+
+message AudioChunk {
+  uint32 sample_rate = 1;
+  uint32 sample_size = 2;
+  uint32 channels = 3;
+  bool sign = 4;
+  AudioEndianness byte_order = 5;
+  repeated float data = 6;
+}
+
 message ExecuteRequest {
   ExecuteType type = 1;
   bytes payload = 2;
@@ -9,6 +23,7 @@ message ExecuteRequest {
 
 enum ExecuteType {
   STRING = 0;
+  AUDIO = 1;
 }
 
 message ExecuteResponse {

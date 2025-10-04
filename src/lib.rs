@@ -4,7 +4,9 @@ pub mod error;
 pub(crate) mod proto;
 
 pub mod common {
-    pub use crate::proto::execute::{ExecuteData, ExecuteRequest, ExecuteResponse};
+    pub use crate::proto::execute::{
+        AudioData, AudioEndiannessType, ExecuteData, ExecuteRequest, ExecuteResponse,
+    };
 }
 
 pub mod client {

@@ -4,4 +4,6 @@ pub type Result<T> = core::result::Result<T, NihilityRpcError>;
 pub enum NihilityRpcError {
     #[error(transparent)]
     ParseString(#[from] alloc::string::FromUtf8Error),
+    #[error(transparent)]
+    ProstDecode(#[from] prost::DecodeError),
 }

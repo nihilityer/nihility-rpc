@@ -1,5 +1,6 @@
+use std::fs;
 use nihility_rpc::client::ExecuteClient;
-use nihility_rpc::common::{ExecuteData, ExecuteRequest, ExecuteResponse};
+use nihility_rpc::common::{AudioData, ExecuteData, ExecuteRequest, ExecuteResponse};
 use nihility_rpc::server::ExecuteServer;
 use std::pin::Pin;
 use time::format_description::well_known::Iso8601;
@@ -14,7 +15,7 @@ use tracing_subscriber::filter::LevelFilter;
 use tracing_subscriber::fmt::time::LocalTime;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
-use tracing_subscriber::{Layer, fmt};
+use tracing_subscriber::{fmt, Layer};
 
 const TEST_PORT: usize = 8000;
 
@@ -48,13 +49,20 @@ impl nihility_rpc::server::Execute for TestExecuteServer {
             .try_into()
             .expect("execute request data format error");
         info!("Executing request: {:?}", req);
-        let (tx, rx) = mpsc::channel(10);
+        let (tx, rx) = mpsc::channel(11);
         for i in 0..10 {
             info!("stream out index： {}", i);
             tx.send(Ok(ExecuteData::String(format!("test, index: {}", i)).into()))
                 .await
                 .expect("stream out failed");
         }
+        tx.send(Ok(ExecuteData::Audio(AudioData {
+            data: vec![1f32, 1f32, 0.1],
+            ..Default::default()
+        })
+        .into()))
+            .await
+            .expect("stream out failed");
         Ok(Response::new(
             Box::pin(ReceiverStream::new(rx)) as Self::ExecuteStreamOutStream
         ))
@@ -132,7 +140,13 @@ async fn test_execute_client(shutdown_tx: oneshot::Sender<()>) {
     info!("client connected");
     info!("test service execute function");
     let execute_resp: ExecuteData = client
-        .execute(Request::new(ExecuteData::String("test".to_string()).into()))
+        .execute(Request::new(
+            ExecuteData::Audio(AudioData {
+                data: vec![0.2, 0.2, 0.2],
+                ..Default::default()
+            })
+            .into(),
+        ))
         .await
         .expect("execute response error")
         .into_inner()
@@ -164,6 +178,23 @@ async fn test_execute_client(shutdown_tx: oneshot::Sender<()>) {
             "execute_stream_resp_chunk: {:?}",
             ExecuteData::try_from(resp_chunk).expect("execute_stream_resp_chunk format error")
         );
+    }
+    info!("test audio data type");
+    let audio_file = fs::File::open("data/test.wav").expect("open audio file error");
+    let (header, audio_samples) = wav_io::read_from_file(audio_file).expect("read audio file error");
+    let audio_resp: ExecuteData = client.execute(Request::new(ExecuteData::Audio(AudioData {
+        data: audio_samples,
+        ..Default::default()
+    }).into())).await.expect("execute audio error").into_inner().try_into().expect("execute audio error");
+    let mut out_file = fs::File::create("data/out.wav").expect("open audio file error");
+    match audio_resp {
+        ExecuteData::Audio(audio_data) => {
+            wav_io::write_to_file(&mut out_file, &header, &audio_data.data).expect("write audio file error");
+            info!("write audio file");
+        }
+        _ => {
+            error!("wrong audio format");
+        }
     }
     info!("test success");
     let _ = shutdown_tx.send(());
