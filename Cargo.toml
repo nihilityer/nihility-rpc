@@ -1,6 +1,6 @@
 [package]
 name = "nihility-rpc"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 authors = ["nihilityer <nihilityer@mail.nihilityer.top>"]
 description = "nihility project rpc module"
